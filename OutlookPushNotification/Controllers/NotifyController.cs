@@ -142,7 +142,7 @@ namespace OutlookPushNotification.Controllers
             {
                 SubscriptionRequestData requsetData = new SubscriptionRequestData();
                 requsetData.OdataType = "#Microsoft.OutlookServices.PushSubscription";
-                requsetData.Resource = "https://outlook.office.com/api/v2.0/me/events/?$filter=SingleValueExtendedProperties%2FAny(ep%3A%20ep%2FPropertyId%20eq%20'String%20{00020329-0000-0000-C000-000000000046}%20Name%20cecp-7e24ee5e-204e-4eeb-aa0f-788af20fc21c'%20and%20ep%2FValue%20ne%20null)";
+                requsetData.Resource = "https://outlook.office.com/api/v2.0/me/Events?$filter=SingleValueExtendedProperties/Any (ep: ep/PropertyId eq 'String {00020329-0000-0000-C000-000000000046} Name cecp-7e24ee5e-204e-4eeb-aa0f-788af20fc21c' and contains(ep/Value, '\"meetingsetby\":\"webex\"'))";
                 requsetData.NotificationURL = "https://exchangepushnotifications.azurewebsites.net/api/Notify/CiscoWebExDemoNotifier";
                 requsetData.ClientState = WebConfigurationManager.AppSettings["clientState"];
                 requsetData.ChangeType = "Created,Updated,Deleted";
