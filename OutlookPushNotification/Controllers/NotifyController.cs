@@ -18,6 +18,7 @@ namespace OutlookPushNotification.Controllers
 {
     public class NotifyController : ApiController
     {
+		
         /// <summary>
         /// It checks user is already exists with this email or not.
         /// if user already exists, it refreshes the token and renews the push notification subscription.
