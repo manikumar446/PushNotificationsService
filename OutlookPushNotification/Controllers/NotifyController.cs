@@ -18,6 +18,30 @@ namespace OutlookPushNotification.Controllers
 {
     public class NotifyController : ApiController
     {
+        [HttpGet]
+        public string DecimalToHexadecimal(string decNumber)
+        {
+            Int64 decimalNumber, quotient;
+            Int64 i = 1, j, temp = 0;
+            string hexadecimalNumber = "";
+            Char temp1;
+            decimalNumber = Int64.Parse(decNumber);
+            quotient = decimalNumber;
+            while (quotient != 0)
+            {
+                temp = quotient % 16;
+                if (temp < 10)
+                    temp = temp + 48;
+                else
+                    temp = temp + 55;
+                temp1 = Convert.ToChar(temp);
+                hexadecimalNumber = temp1 + hexadecimalNumber;
+                quotient = quotient / 16;
+
+
+            }
+            return hexadecimalNumber;
+        }
 		
         /// <summary>
         /// It checks user is already exists with this email or not.
