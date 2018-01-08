@@ -18,31 +18,7 @@ namespace OutlookPushNotification.Controllers
 {
     public class NotifyController : ApiController
     {
-        [HttpGet]
-        public string DecimalToHexadecimal(string decNumber)
-        {
-            Int64 decimalNumber, quotient;
-            Int64 i = 1, j, temp = 0;
-            string hexadecimalNumber = "";
-            Char temp1;
-            decimalNumber = Int64.Parse(decNumber);
-            quotient = decimalNumber;
-            while (quotient != 0)
-            {
-                temp = quotient % 16;
-                if (temp < 10)
-                    temp = temp + 48;
-                else
-                    temp = temp + 55;
-                temp1 = Convert.ToChar(temp);
-                hexadecimalNumber = temp1 + hexadecimalNumber;
-                quotient = quotient / 16;
-
-
-            }
-            return hexadecimalNumber;
-        }
-		
+       
         /// <summary>
         /// It checks user is already exists with this email or not.
         /// if user already exists, it refreshes the token and renews the push notification subscription.
@@ -166,8 +142,8 @@ namespace OutlookPushNotification.Controllers
             {
                 SubscriptionRequestData requsetData = new SubscriptionRequestData();
                 requsetData.OdataType = "#Microsoft.OutlookServices.PushSubscription";
-                requsetData.Resource = "https://outlook.office.com/api/v2.0/me/Events?$filter=SingleValueExtendedProperties/Any (ep: ep/PropertyId eq 'String {00020329-0000-0000-C000-000000000046} Name cecp-7e24ee5e-204e-4eeb-aa0f-788af20fc21c' and contains(ep/Value, '\"meetingsetby\":\"webex\"'))";
-                requsetData.NotificationURL = "https://exchangepushnotifications.azurewebsites.net/api/Notify/CiscoWebExDemoNotifier";
+                requsetData.Resource = "https://outlook.office.com/api/v2.0/me/Events?$filter=SingleValueExtendedProperties/Any (ep: ep/PropertyId eq 'String {00020329-0000-0000-C000-000000000046} Name cecp-7e24ee5e-204e-4eeb-aa0f-788af20fc21c' and contains(ep/Value, '\"meetingsetby\":\"demo-addin\"'))";
+                requsetData.NotificationURL = "https://exchangepushnotifications.azurewebsites.net/api/Notify/PushNotificationDemo";
                 requsetData.ClientState = WebConfigurationManager.AppSettings["clientState"];
                 requsetData.ChangeType = "Created,Updated,Deleted";
 
@@ -253,123 +229,17 @@ namespace OutlookPushNotification.Controllers
             return true;
         }
 
-        ///// <summary>
-        ///// This end point receives the push notification and process it.
-        ///// For demo purpose we are just writing notification details to log file and sending an email to user mail box.
-        ///// </summary>
-        ///// <param name="validationToken"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public async Task<HttpResponseMessage> CiscoWebExDemoNotifier(string validationToken = null)
-        //{
-        //    string fullPath = "D:\\home\\site\\wwwroot\\CiscoWebExNotifier.txt";
-           
-        //    try
-        //    {
-        //        // If a validation token is present, we need to respond within 5 seconds.
-        //        if (validationToken != null)
-        //        {
-        //            var response = Request.CreateResponse(HttpStatusCode.OK);
-        //            response.Content = new StringContent(validationToken);
-        //            // Create a file to write to.
-        //            using (StreamWriter sw = File.AppendText(fullPath))
-        //            {
-        //                sw.WriteLine(DateTime.Now);
-        //                sw.WriteLine(validationToken);
-        //            }
-        //            return response;
-        //        }
-        //        else
-        //        {
-        //            using (StreamWriter sw = File.AppendText(fullPath))
-        //            {
-        //                sw.WriteLine(DateTime.Now);
-        //            }
-
-        //            //get the notification details and write them to a log file.
-        //            var content = await Request.Content.ReadAsStringAsync();
-        //            var notifications = JsonConvert.DeserializeObject<ResponseModel<NotificationModel>>(content).Value;
-
-        //            using (StreamWriter sw = File.AppendText(fullPath))
-        //            {
-        //                sw.WriteLine(content);
-        //            }
-
-        //            //TODO: Process the notification
-        //            foreach (var notification in notifications)
-        //            {
-        //                if (!notification.ChangeType.Equals("Updated"))
-        //                {
-        //                    var response = Request.CreateResponse(HttpStatusCode.OK);
-        //                    response.Content = new StringContent("success");
-        //                    return response;
-        //                }
-
-        //                var dbContext = new DbHelper();
-        //                var user = dbContext.GetUserBySubscriptionId(notification.SubscriptionId);
-
-        //                var httpClient = new HttpClient();
-        //                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.AccessToken);
-
-        //                // Send a GET call to the monitored event.
-        //                var responseString = await httpClient.GetStringAsync(notification.Resource);
-        //                var calendarEvent = JsonConvert.DeserializeObject<CalendarEventModel>(responseString);
-
-
-        //                //update the event body
-        //                //calendar API documentation:https://msdn.microsoft.com/en-us/office/office365/api/calendar-rest-operations#UpdateEvents 
-        //                var httpContent = new StringContent("{\"Body\": { \"ContentType\" : \"HTML\", \"Content\": \"------NEW MEETING BODY-----\"} }", Encoding.UTF8, "application/json");
-        //                var method = new HttpMethod("PATCH");
-        //                httpClient = new HttpClient();
-        //                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + user.AccessToken);
-
-        //                //Rest API to update calendar Event
-        //                var request = new HttpRequestMessage(method, "https://outlook.office.com/api/v2.0/me/events/" + calendarEvent.Id)
-        //                {
-        //                    Content = httpContent
-        //                };
-
-        //                var httpResponse = await httpClient.SendAsync(request);
-
-        //                if (httpResponse.IsSuccessStatusCode)
-        //                {
-        //                     Console.WriteLine("Event updated successfully");
-        //                }
-        //                else
-        //                {
-        //                    Console.WriteLine("Event updated failed" + httpResponse.StatusCode.ToString());
-        //                }
-        //            }
-
-        //            var response1 = Request.CreateResponse(HttpStatusCode.OK);
-        //            response1.Content = new StringContent("success");
-        //            return response1;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        using (StreamWriter sw = File.AppendText(fullPath))
-        //        {
-        //            sw.WriteLine(DateTime.Now);
-        //            sw.WriteLine(ex.Message);
-        //            sw.WriteLine(ex.StackTrace);
-        //        }
-        //        var response = Request.CreateResponse(HttpStatusCode.OK);
-        //        response.Content = new StringContent("success");
-        //        return response;
-        //    }
-        //}
 
         /// <summary>
-        /// This end point receives the push notification and process it.
+        /// This end point receives the push notification and processes it.
         /// For demo purpose we are just writing notification details to log file and sending an email to user mail box.
         /// </summary>
         /// <param name="validationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<HttpResponseMessage> CiscoWebExDemoNotifier(string validationToken = null)
+        public async Task<HttpResponseMessage> PushNotificationDemo(string validationToken = null)
         {
-            string fullPath = "D:\\home\\site\\wwwroot\\CiscoWebExNotifier.txt";
+            string fullPath = "D:\\home\\site\\wwwroot\\PushNotificationDemo_log.txt";
             try
             {
 
