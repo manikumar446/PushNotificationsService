@@ -242,9 +242,6 @@ namespace OutlookPushNotification.Controllers
             string fullPath = "D:\\home\\site\\wwwroot\\PushNotificationDemo_log.txt";
             try
             {
-
-                //string fullPath = "C:\\Mani kumar\\workspace\\Cisco\\OutlookPushNotification\\OutlookPushNotification\\CiscoWebExNotifier.txt";
-
                 // If a validation token is present, we need to respond within 5 seconds.
                 if (validationToken != null)
                 {
